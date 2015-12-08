@@ -1,2 +1,4 @@
 #!/bin/sh
+chmod 777 /data0/opt/bina/snpEff/logs
+chmod 777 /data0/opt/bina/snpEff/scratch
 

@@ -59,7 +59,7 @@
                 <data>
                   <type>template</type>
                   <paths>
-                    <path>/data0/opt/bina/logs</path>
+                    <path>/data0/opt/bina/snpEff/logs</path>
 		    <path>/data0/opt/bina/snpEff/scratch</path>
                   </paths>
                   <mapper>
