@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+SNPEFF_HOME=/data0/opt/bina/snpEff
+SNPEFF_LOGS=/data0/opt/bina/snpEff/logs
+
+SRC=$1
+TARGET=$2
+JOBNAME=$3
+REF=$4
+
+{
+  echo "starting $JOBNAME: " `date +"%Y-%m-%d %H:%M:%S"`
+  echo "starting $JOBNAME: " `date +"%Y-%m-%d %H:%M:%S"` >&2
+  echo "src: $SRC"
+  echo "target: $TARGET"
+  echo "ref: $REF"
+
+  cd $SNPEFF_HOME
+  mkdir -p scratch/$JOBNAME/input scratch/$JOBNAME/output
+  hdfs dfs -get $SRC/* scratch/$JOBNAME/input
+
+  for fname in scratch/$JOBNAME/input/*
+  do
+    file=`basename $fname`
+    java -Xmx2g -jar snpEff.jar -classic -hgvs $REF -v $fname 2>&1 1>scratch/$JOBNAME/output/snpeff-$file
+  done
+
+  hdfs dfs -mkdir -p $TARGET
+  hdfs dfs -rm $TARGET/*
+  hdfs dfs -put scratch/$JOBNAME/output/* $TARGET
+
+  rm -r scratch/$JOBNAME
+  echo "completed $JOBNAME: " `date +"%Y-%m-%d %H:%M:%S"` | tee /dev/stderr
+} >$SNPEFF_LOGS/log-snpeff-$JOBNAME.stdout 2>$SNPEFF_LOGS/log-snpeff-$JOBNAME.stderr
+
+cat $SNPEFF_LOGS/log-snpeff-$JOBNAME.stdout | tee -a $SNPEFF_LOGS/snpeff.out
+cat $SNPEFF_LOGS/log-snpeff-$JOBNAME.stderr | tee -a $SNPEFF_LOGS/snpeff.err >&2
+
+rm $SNPEFF_LOGS/log-snpeff-$JOBNAME.*

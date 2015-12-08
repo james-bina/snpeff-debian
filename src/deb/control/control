@@ -1,0 +1,7 @@
+Package: aaim-snpeff
+Version: 0.1.0-4.1l
+Section: misc
+Priority: low
+Architecture: all
+Description: custom snpeff for aaim deployment
+Maintainer: james.warren@bina.roche.com

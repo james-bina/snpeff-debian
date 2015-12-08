@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.bina</groupId>
+    <artifactId>aaim-snpeff</artifactId>
+    <version>0.1.0-4.1l</version>
+    <description>custom snpeff for aim-deployment</description>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
+    <packaging>deb</packaging>
+    
+    <build>
+      <extensions>
+	<extension>
+	  <groupId>org.vafer</groupId>
+	  <artifactId>jdeb</artifactId>
+	  <version>1.4</version>
+	</extension>
+      </extensions>
+      
+      <pluginManagement>
+	<plugins>
+	  <plugin>
+	    <artifactId>jdeb</artifactId>
+	    <groupId>org.vafer</groupId>
+
+	    <configuration>
+              <controlDir>src/deb/control</controlDir>
+              <signPackage>no</signPackage>
+              <snapshotExpand>false</snapshotExpand>
+              <verbose>true</verbose>
+	      <dataSet>
+		<data>
+		  <type>archive</type>
+		  <src>src/deb/deploy/snpEff_v4_1l_core.tgz</src>
+		  <mapper>
+		    <type>perm</type>
+		    <prefix>/data0/opt/bina</prefix>
+		    <user>bina</user>
+		    <group>bina</group>
+		  </mapper>
+		</data>
+
+		<data>
+		  <type>file</type>
+		  <src>src/deb/deploy/yarn-snpeff</src>
+		  <dst>/data0/opt/bina/snpEff/yarn-snpeff</dst>
+		  <mapper>
+		    <type>perm</type>
+		    <user>bina</user>
+		    <group>bina</group>
+		    <filemode>700</filemode>
+		  </mapper>
+		</data>
+		
+                <data>
+                  <type>template</type>
+                  <paths>
+                    <path>/data0/opt/bina/logs</path>
+		    <path>/data0/opt/bina/snpEff/scratch</path>
+                  </paths>
+                  <mapper>
+                    <type>perm</type>
+                    <user>bina</user>
+                    <group>bina</group>
+		    <dirmode>777</dirmode>
+                  </mapper>
+                </data>		
+
+	      </dataSet>
+	    </configuration>
+	    
+	  </plugin>
+	</plugins>
+      </pluginManagement>
+
+    </build>
+</project>
