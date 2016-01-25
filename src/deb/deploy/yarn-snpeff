@@ -17,16 +17,17 @@ REF=$4
 
   cd $SNPEFF_HOME
   mkdir -p scratch/$JOBNAME/input scratch/$JOBNAME/output
-  hdfs dfs -get $SRC/* scratch/$JOBNAME/input
+  hdfs dfs -get $SRC scratch/$JOBNAME/input/
 
   for fname in scratch/$JOBNAME/input/*
   do
     file=`basename $fname`
-    java -Xmx2g -jar snpEff.jar -classic -hgvs $REF -v $fname 2>&1 1>scratch/$JOBNAME/output/snpeff-$file
+    uncompressedFile=${file%.gz}
+    hdfs dfs -rm $TARGET/snpeff-$uncompressedFile
+    java -Xmx2g -jar snpEff.jar -classic -hgvs $REF -v $fname 2>&1 1>scratch/$JOBNAME/output/snpeff-$uncompressedFile
   done
 
   hdfs dfs -mkdir -p $TARGET
-  hdfs dfs -rm $TARGET/*
   hdfs dfs -put scratch/$JOBNAME/output/* $TARGET
 
   rm -r scratch/$JOBNAME
