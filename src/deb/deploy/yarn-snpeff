@@ -28,8 +28,8 @@ REF=$4
       uncompressedFile=${BASH_REMATCH[1]}
     elif [[ $filename =~ (.*)\.gz$ ]]; then
       uncompressedFile=${BASH_REMATCH[1]}
-    dlse
-      uncompressedFile=filename
+    else
+      uncompressedFile=$filename
     fi
     java -Xmx2g -jar snpEff.jar -classic -hgvs $REF -v $fname 2>&1 1>scratch/$JOBNAME/output/snpeff-$uncompressedFile
     rm $fname
